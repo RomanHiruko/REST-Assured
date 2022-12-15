@@ -1,3 +1,5 @@
+package pojoclasses;
+
 import java.util.Map;
 
 public class WeatherFact {

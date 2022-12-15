@@ -1,3 +1,5 @@
+package pojoclasses;
+
 public class UserRegister {
     private String email;
     private String password;
