@@ -28,15 +28,16 @@ public class PostRestAssuredTest {
                 .baseUri(URL)
                 .contentType(ContentType.JSON)
                 .body(user)
+                .expect()
+                .statusCode(201)
                 .when()
                 .post("api/users")
-                .then().log().all()
-                .statusCode(201);
+                .then().log().all();
     }
 
     @Test
     @DisplayName("Создать пользователя")
-    public void postTestSpecification() {
+    public void postTest() {
         String user = """
                 {
                     "name": "morpheus",
@@ -61,7 +62,7 @@ public class PostRestAssuredTest {
     @Test
     @DisplayName("Создать пользователя без пароля")
     public void reqresWithSpecificationTest() {
-        Specifications.installSpec(Specifications.reqresRequestSpec(), Specifications.responseSpecError400());
+        Specifications.installSpec(Specifications.reqresRequestSpec(), Specifications.responseSpecUnique(400));
 
         UserRegister userRegister = new UserRegister("sydney@fife", "");
 
