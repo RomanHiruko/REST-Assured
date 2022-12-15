@@ -1,3 +1,5 @@
+package tests;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -5,6 +7,8 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pojoclasses.UserRegister;
+import specifications.Specifications;
 
 import java.time.Clock;
 
@@ -14,10 +18,11 @@ public class PostRestAssuredTest {
     @Test
     @DisplayName("Создать пользователя, Fluent стиль")
     public void postTestFluent() {
-        String user = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"leader\"\n" +
-                "}";
+        String user = """
+                {
+                    "name": "morpheus",
+                    "job": "leader"
+                }""";
         RestAssured
                 .given()
                 .baseUri(URL)
@@ -32,10 +37,11 @@ public class PostRestAssuredTest {
     @Test
     @DisplayName("Создать пользователя")
     public void postTestSpecification() {
-        String user = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"leader\"\n" +
-                "}";
+        String user = """
+                {
+                    "name": "morpheus",
+                    "job": "leader"
+                }""";
 
         RequestSpecification request = RestAssured.given();
         request.baseUri(URL);
