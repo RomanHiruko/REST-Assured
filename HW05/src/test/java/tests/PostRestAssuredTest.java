@@ -24,12 +24,12 @@ public class PostRestAssuredTest {
                     "job": "leader"
                 }""";
         RestAssured
+                .expect()
+                .statusCode(201)
                 .given()
                 .baseUri(URL)
                 .contentType(ContentType.JSON)
                 .body(user)
-                .expect()
-                .statusCode(201)
                 .when()
                 .post("api/users")
                 .then().log().all();
@@ -47,8 +47,8 @@ public class PostRestAssuredTest {
         RequestSpecification request = RestAssured.given();
         request.baseUri(URL);
         request.body(user);
-        request.then().statusCode(201)
-                .header("Content-Type", "application/json; charset=utf-8");
+        request.expect().statusCode(201);
+        request.header("Content-Type", "application/json; charset=utf-8");
         request.contentType(ContentType.JSON);
 
         Response response = request.post("api/users");
@@ -66,7 +66,9 @@ public class PostRestAssuredTest {
 
         UserRegister userRegister = new UserRegister("sydney@fife", "");
 
-        Response response = RestAssured.given()
+        Response response = RestAssured
+                .expect().statusCode(400)
+                .given()
                 .body(userRegister)
                 .when()
                 .post("/api/register");

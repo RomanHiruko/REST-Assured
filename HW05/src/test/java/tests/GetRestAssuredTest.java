@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import pojoclasses.WeatherFact;
 import specifications.Specifications;
 
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.expect;
 
 public class GetRestAssuredTest {
     public static final String weatherURL = "https://api.weather.yandex.ru/v2/forecast?lat=48.7194&lon=44.5018&ru_RU&extra=true";
@@ -22,12 +22,13 @@ public class GetRestAssuredTest {
     @DisplayName("Проверка доступа к Яндекс.Погода")
     public void getWeatherFluentTest() {
         RestAssured
+                .expect()
+                .statusCode(200)
                 .given()
                 .header(apiKey[0], apiKey[1])
                 .when()
                 .get(weatherURL)
-                .then().log().all()
-                .statusCode(200);
+                .then().log().all();
     }
 
     @Test
@@ -38,8 +39,7 @@ public class GetRestAssuredTest {
                 .addHeader(apiKey[0], apiKey[1])
                 .build();
 
-        Response response = given()
-                .expect()
+        Response response = expect()
                 .header("Content-Type", "application/json")
                 .statusLine("HTTP/1.1 200 OK")
                 .statusCode(200)
@@ -60,20 +60,23 @@ public class GetRestAssuredTest {
     @Test
     @DisplayName("Проверка, что доступ без ключа запрещен")
     public void accessForbiddenWithoutKey() {
-        ResponseSpecification response = RestAssured.expect();
+        ResponseSpecification response = expect();
         response.statusLine("HTTP/1.1 403 Forbidden");
         response.statusCode(403);
 
-        RequestSpecification request = RestAssured.given();
+        RequestSpecification request = RestAssured
+                .given();
         request.baseUri(weatherURL);
         request.get();
     }
 
     @Test
+    @DisplayName("Получение погоды со спецификацией")
     public void weatherWithSpecificationTest() {
         Specifications.installSpec(Specifications.weatherRequestSpec(), Specifications.responseSpecOK200());
 
-        WeatherFact weatherFact = given()
+        WeatherFact weatherFact = expect().statusCode(200)
+                .given()
                 .when()
                 .get()
                 .then()
