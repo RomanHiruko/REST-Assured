@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pojoclasses.UserRegister;
-import specifications.Specifications;
 
 import java.time.Clock;
+
+import static io.restassured.RestAssured.expect;
 
 public class PostRestAssuredTest {
     public static final String URL = "https://reqres.in/";
@@ -23,8 +24,7 @@ public class PostRestAssuredTest {
                     "name": "morpheus",
                     "job": "leader"
                 }""";
-        RestAssured
-                .expect()
+        expect()
                 .statusCode(201)
                 .given()
                 .baseUri(URL)
@@ -62,16 +62,16 @@ public class PostRestAssuredTest {
     @Test
     @DisplayName("Создать пользователя без пароля")
     public void reqresWithSpecificationTest() {
-        Specifications.installSpec(Specifications.reqresRequestSpec(), Specifications.responseSpecUnique(400));
 
         UserRegister userRegister = new UserRegister("sydney@fife", "");
 
-        Response response = RestAssured
-                .expect().statusCode(400)
-                .given()
-                .body(userRegister)
-                .when()
-                .post("/api/register");
+        Response response =
+                expect().statusCode(400)
+                        .given()
+                        .contentType(ContentType.JSON)
+                        .body(userRegister)
+                        .when()
+                        .post(URL + "api/register");
 
         response.prettyPrint();
     }
